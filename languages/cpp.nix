@@ -8,5 +8,9 @@ args@{
   shellHook = ''
     export CC=clang
     export CXX=clang++
+    # Prepare compile_commands.json
+    if ! ( mkdir -p build && cd build && cmake ..; ); then
+      echo "Unable to generate compile_commands.json"
+    fi
   '';
 }
