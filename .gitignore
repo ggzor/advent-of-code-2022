@@ -1,5 +1,7 @@
 ## AOC cookie
 .cookie
+## Clipboard files
+cb.txt
 
 ## Nix
 .direnv
