@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/22.05";
+    nixpkgs.url = "github:nixos/nixpkgs/22.11";
     flake-utils.url = "github:numtide/flake-utils";
   };
   outputs = { self, nixpkgs, flake-utils }:
@@ -15,12 +15,22 @@
             pynvim
             rope
           ];
-          python-with-packages = pkgs.python310.withPackages pythonPackages;
+          pythonWithPackages = pkgs.python310.withPackages pythonPackages;
       in {
         devShell = pkgs.mkShell {
-          packages = [
-            python-with-packages
+          packages = with pkgs; [
+            pythonWithPackages
+            swiProlog
+            # C++
+            llvmPackages_14.clang
+            cmake
+            fmt_9
+            range-v3
           ];
+          shellHook = ''
+            export CC=clang
+            export CXX=clang++
+          '';
         };
       }
     );
