@@ -5,33 +5,23 @@
   };
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = nixpkgs.legacyPackages.${system};
-          pythonPackages = pkgs: with pkgs; [
-            more-itertools
-            numpy
+      let
+        languages = [
+          ./languages/python.nix
+          ./languages/prolog.nix
+          ./languages/cpp.nix
+        ];
 
-            # Development
-            black
-            pynvim
-            rope
-          ];
-          pythonWithPackages = pkgs.python310.withPackages pythonPackages;
-      in {
-        devShell = pkgs.mkShell {
-          packages = with pkgs; [
-            pythonWithPackages
-            swiProlog
-            # C++
-            llvmPackages_14.clang
-            cmake
-            fmt_9
-            range-v3
-          ];
-          shellHook = ''
-            export CC=clang
-            export CXX=clang++
-          '';
+        pkgs = nixpkgs.legacyPackages.${system};
+        allPackages = map (path: pkgs.callPackage path {}) languages;
+
+        mergePackagesAndHook = p1: p2: {
+          packages = p1.packages or [] ++  p2.packages or [];
+          shellHook = p1.shellHook or "" + "\n" +  p2.shellHook or "";
         };
+        mergeMkShellParams = builtins.foldl' mergePackagesAndHook {} allPackages;
+      in {
+        devShell = pkgs.mkShell mergeMkShellParams;
       }
     );
 }
