@@ -19,11 +19,14 @@ let
     sha256 = "0lx7vffflak0y8l8vg8k0g8qddwwn23ksbz02hi3f8rbarh1n89q";
   };
 
+  aoc_utils = ../utils;
+
   swiplWithPacks = swiProlog.override {
     extraPacks = map (dep-path: "'file://${dep-path}'") [
       func
       list_util
       function_expansion
+      aoc_utils
     ];
   };
 in {
