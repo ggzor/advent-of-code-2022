@@ -2,7 +2,10 @@ from collections import Counter, defaultdict, deque
 from heapq import heappush, heappop, heapify
 from pprint import PrettyPrinter
 from queue import PriorityQueue
+import dataclasses
+import functools
 import itertools as it
+import math
 import more_itertools as mit
 import numpy as np
 import operator as op
@@ -55,7 +58,3 @@ def input_full_words() -> list[list[str]]:
 
 def list_int(it):
     return list(map(int, it))
-
-
-def re_groups(regex, s):
-    return re.match(regex, s).groups()

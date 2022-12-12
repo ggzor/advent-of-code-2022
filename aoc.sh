@@ -40,9 +40,12 @@ main() {
       # Download input
       if [[ ! -f "$TARGET_INPUT" ]]; then
         info "Downloading input..."
-        curl -sfL --cookie "$COOKIE" \
-          "https://adventofcode.com/$YEAR/day/$((10#$DAY))/input" \
-          > "$TARGET_INPUT"
+        if ! curl -sfL --cookie "$COOKIE" \
+               "https://adventofcode.com/$YEAR/day/$((10#$DAY))/input" \
+               > "$TARGET_INPUT"; then
+          warning "Unable to download input"
+          rm "$TARGET_INPUT"
+        fi
       else
         info "Input already downloaded"
       fi
@@ -84,6 +87,10 @@ cp_if_needed() {
 
 info() {
   printf '\e[2mInfo: %s\e[0m\n' "$1"
+}
+
+warning() {
+  printf '\e[1;33mWarning:\e[0m %s\n' "$1"
 }
 
 success() {

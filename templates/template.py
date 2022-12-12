@@ -1,3 +1,3 @@
 from utils import *
 
-print("Template setup correctly")
+print(input_text())
